@@ -31,14 +31,14 @@ services:
       - AWS_ACCESS_KEY_ID=minioadmin
       - AWS_SECRET_ACCESS_KEY=minioadmin
       - AWS_REGION=us-east-1
-    command: >
-      /tusd
-      -s3-bucket=uploads
-      -s3-endpoint=http://minio:9000
-      -s3-disable-ssl
-      -max-size=5368709120
-      -behind-proxy
-      -cors
+    command:
+      - "/tusd"
+      - "-s3-bucket=uploads"
+      - "-s3-endpoint=http://minio:9000"
+      - "-s3-disable-ssl"
+      - "-max-size=5368709120"
+      - "-behind-proxy"
+      - "-cors"
     networks:
       - tusd-network
     healthcheck:
