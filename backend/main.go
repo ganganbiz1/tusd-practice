@@ -4,8 +4,6 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"net/http/httputil"
-	"net/url"
 	"os"
 	"path/filepath"
 
@@ -61,17 +59,6 @@ func main() {
 
 	// Download endpoint
 	e.GET("/download/:filename", downloadFile)
-
-	// TUS protocol endpoints - reverse proxy to tusd service
-	tusURL, _ := url.Parse("http://tusd:1080")
-	tusProxy := httputil.NewSingleHostReverseProxy(tusURL)
-
-	e.POST("/files/*", echo.WrapHandler(tusProxy))
-	e.PATCH("/files/*", echo.WrapHandler(tusProxy))
-	e.HEAD("/files/*", echo.WrapHandler(tusProxy))
-	e.DELETE("/files/*", echo.WrapHandler(tusProxy))
-	e.GET("/files/*", echo.WrapHandler(tusProxy))
-	e.OPTIONS("/files/*", echo.WrapHandler(tusProxy))
 
 	// Start server
 	fmt.Println("Backend server starting on :8080")

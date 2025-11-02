@@ -49,7 +49,7 @@ export default function FileUploader({ onUploadComplete }: FileUploaderProps) {
 
   const uploadFile = (file: File, uploadId: string) => {
     const upload = new tus.Upload(file, {
-      endpoint: "/api/files/",
+      endpoint: "http://localhost:1080/files/",
       retryDelays: [0, 3000, 5000, 10000, 20000],
       metadata: {
         name: file.name,

@@ -26,7 +26,7 @@ services:
       - "1080:8080"
     volumes:
       - tusd_data:/srv/tusd-data
-    command: /tusd -dir=/srv/tusd-data -max-size=5368709120
+    command: /tusd -dir=/srv/tusd-data -max-size=5368709120 -behind-proxy -cors
     networks:
       - tusd-network
     healthcheck:
@@ -36,7 +36,7 @@ services:
       retries: 10
       start_period: 10s
 
-  # Go backend with Echo and reverse proxy to tusd
+  # Go backend with Echo for file management
   backend:
     build:
       context: ./backend
@@ -46,14 +46,11 @@ services:
     depends_on:
       minio:
         condition: service_healthy
-      tusd:
-        condition: service_healthy
     environment:
       - MINIO_ENDPOINT=minio:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
       - MINIO_USE_SSL=false
-      - TUS_URL=http://tusd:1080
     networks:
       - tusd-network
     healthcheck:
