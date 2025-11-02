@@ -5,6 +5,7 @@ import { formatFileSize } from "@/lib/utils";
 
 interface Upload {
   name: string;
+  key?: string;
   size: string;
 }
 
@@ -14,8 +15,10 @@ interface UploadListProps {
 }
 
 export default function UploadList({ uploads, onRefresh }: UploadListProps) {
-  const handleDownload = (filename: string) => {
-    window.open(`/api/download/${encodeURIComponent(filename)}`, "_blank");
+  const handleDownload = (upload: Upload) => {
+    // Use 'key' if available (for tusd S3 uploads), otherwise use 'name'
+    const downloadKey = upload.key || upload.name;
+    window.open(`/api/download/${encodeURIComponent(downloadKey)}`, "_blank");
   };
 
   if (!uploads || uploads.length === 0) {
@@ -57,7 +60,7 @@ export default function UploadList({ uploads, onRefresh }: UploadListProps) {
             </div>
           </div>
           <button
-            onClick={() => handleDownload(upload.name)}
+            onClick={() => handleDownload(upload)}
             className="ml-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium"
           >
             ダウンロード

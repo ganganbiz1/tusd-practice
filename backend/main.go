@@ -78,8 +78,17 @@ func listUploads(c echo.Context) error {
 		if object.Err != nil {
 			continue
 		}
+
+		// Get object metadata to retrieve original filename
+		objInfo, err := minioClient.StatObject(ctx, bucketName, object.Key, minio.StatObjectOptions{})
+		displayName := object.Key
+		if err == nil && objInfo.UserMetadata["filename"] != "" {
+			displayName = objInfo.UserMetadata["filename"]
+		}
+
 		uploads = append(uploads, map[string]string{
-			"name": object.Key,
+			"name": displayName,
+			"key":  object.Key,
 			"size": fmt.Sprintf("%d", object.Size),
 		})
 	}
